@@ -74,15 +74,23 @@ export function sourceFor(article: { markdown: string; kind: SourceKind }): stri
  */
 export async function askModel<T>(system: string, user: string, temperature = 0.3): Promise<T | null> {
   const models = env.openrouterModels();
-  const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${env.openrouterKey()}`, "Content-Type": "application/json", "X-Title": "Podify" },
-    body: JSON.stringify({
-      ...(models.length > 1 ? { models } : { model: models[0] }),
-      temperature,
-      messages: [{ role: "system", content: system }, { role: "user", content: user }],
-    }),
-  });
+  const call = () =>
+    fetch("https://openrouter.ai/api/v1/chat/completions", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${env.openrouterKey()}`, "Content-Type": "application/json", "X-Title": "Podify" },
+      body: JSON.stringify({
+        ...(models.length > 1 ? { models } : { model: models[0] }),
+        temperature,
+        messages: [{ role: "system", content: system }, { role: "user", content: user }],
+      }),
+    });
+  let res = await call();
+  // Free models are often briefly rate-limited or slow upstream: one retry, then give up politely.
+  if ([408, 429, 502, 503, 504].includes(res.status)) {
+    await new Promise((r) => setTimeout(r, 2500));
+    res = await call();
+  }
+  if ([408, 429, 502, 503, 504].includes(res.status)) throw new Error("The free AI model is busy right now. Give it a few seconds and try again.");
   if (!res.ok) throw new Error(`OpenRouter failed (${await readError(res)})`);
   const json = await res.json();
   const raw: string = json?.choices?.[0]?.message?.content ?? "";

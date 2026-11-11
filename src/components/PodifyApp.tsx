@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { Episode, Profile } from "@/lib/supabase-admin";
 import { hostOf } from "@/lib/cover";
 import Player, { Equalizer, Vinyl } from "./Player";
+import Scene3D, { Cursor } from "./Scene3D";
 
 type Step = "idle" | "scraping" | "writing" | "recording" | "saving";
 
@@ -197,6 +198,28 @@ function useTypewriter(phrases: string[]) {
   return text;
 }
 
+/** Letters tip up into place one after another. Words stay whole so lines never break mid-word. */
+function Chars({ text, start = 180 }: { text: string; start?: number }) {
+  let n = 0;
+  return (
+    <span className="chars" aria-label={text}>
+      {text.split(" ").map((word, w, all) => (
+        <span key={w} aria-hidden className="inline-block whitespace-nowrap">
+          {word.split("").map((ch) => {
+            const i = n++;
+            return (
+              <span key={i} className="char" style={{ animationDelay: `${start + i * 32}ms` }}>
+                {ch}
+              </span>
+            );
+          })}
+          {w < all.length - 1 && <span className="char">{" "}</span>}
+        </span>
+      ))}
+    </span>
+  );
+}
+
 /** Counts up to `value` once. */
 function useCountUp(value: number) {
   const [shown, setShown] = useState(0);
@@ -267,16 +290,18 @@ function Landing({ supabase, featured, total }: { supabase: SupabaseClient; feat
 
   return (
     <>
+      <Scene3D />
+      <Cursor />
       {/* ---------------------------------------------------------- hero */}
       <section className="relative grid items-center gap-12 pt-6 lg:grid-cols-[1.1fr_1fr]">
         <div>
           <p className="rise inline-flex items-center gap-2 rounded-full border border-fuchsia-400/30 bg-fuchsia-400/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-fuchsia-200" style={{ animationDelay: "80ms" }}>
             <span className="live-dot h-1.5 w-1.5 rounded-full bg-fuchsia-400" /> Papers you can listen to
           </p>
-          <h1 className="rise mt-5 text-5xl font-extrabold leading-[1.02] tracking-tight sm:text-7xl" style={{ animationDelay: "160ms" }}>
-            Stop reading papers.
+          <h1 className="mt-5 text-5xl font-extrabold leading-[1.02] tracking-tight sm:text-7xl">
+            <Chars text="Stop reading papers." />
             <br />
-            <span className="shimmer">Start hearing them.</span>
+            <span className="shimmer rise inline-block" style={{ animationDelay: "900ms" }}>Start hearing them.</span>
           </h1>
           <p className="rise mt-6 max-w-xl text-lg text-zinc-300" style={{ animationDelay: "260ms" }}>
             Paste a link to <span className="caret font-semibold text-white">{typed}</span>
@@ -310,34 +335,16 @@ function Landing({ supabase, featured, total }: { supabase: SupabaseClient; feat
           </div>
         </div>
 
-        <div className="rise" style={{ animationDelay: "300ms" }} onMouseMove={tilt} onMouseLeave={untilt}>
-          <div ref={card} className="tilt ring-border rounded-[2rem] p-6 shadow-2xl shadow-fuchsia-900/40 sm:p-8">
-            {featured ? (
-              <>
-                <div className="tilt-pop flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-fuchsia-200">
-                  <span className="live-dot h-2 w-2 rounded-full bg-rose-500" /> On the turntable · press play
-                </div>
-                <h2 className="tilt-pop mt-2 text-2xl font-extrabold leading-tight tracking-tight sm:text-3xl">{featured.title}</h2>
-                <p className="mt-1 text-sm text-zinc-400">Made from a paper on {hostOf(featured.url)}</p>
-                <div className="mt-6">
-                  <Player src={featured.audio_url} seed={featured.id} big />
-                </div>
-                {featured.takeaways && featured.takeaways[0] && (
-                  <p className="mt-5 rounded-2xl border border-white/10 bg-black/30 p-3 text-sm text-zinc-300">
-                    <b className="text-fuchsia-200">Takeaway:</b> {featured.takeaways[0]}
-                  </p>
-                )}
-              </>
-            ) : (
-              <div className="grid place-items-center py-6" aria-hidden>
-                <div className="bob w-52">
-                  <Vinyl seed="hero" spinning />
-                </div>
-                <div className="mt-6">
-                  <Equalizer on large />
-                </div>
-              </div>
-            )}
+        {/* The right half is the stage for the WebGL scene: a paper that becomes a record. */}
+        <div className="rise relative hidden min-h-[30rem] lg:block" style={{ animationDelay: "300ms" }} aria-hidden>
+          <div className="morph-hud absolute inset-x-0 bottom-0 mx-auto w-72">
+            <div className="flex items-center justify-between text-xs font-bold uppercase tracking-[0.2em]">
+              <span className="morph-a">📄 Paper</span>
+              <span className="morph-b">Podcast 🎧</span>
+            </div>
+            <div className="mt-2 h-1 overflow-hidden rounded-full bg-white/10">
+              <div className="morph-bar hot h-full rounded-full" />
+            </div>
           </div>
         </div>
       </section>
@@ -356,6 +363,42 @@ function Landing({ supabase, featured, total }: { supabase: SupabaseClient; feat
           </div>
         ))}
       </div>
+
+      {/* --------------------------------------------------- now playing */}
+      {featured && (
+        <Reveal>
+          <section className="mx-auto mt-16 max-w-3xl" onMouseMove={tilt} onMouseLeave={untilt}>
+            <div ref={card} className="tilt ring-border rounded-[2rem] p-6 shadow-2xl shadow-fuchsia-900/40 sm:p-8">
+                {featured ? (
+                  <>
+                    <div className="tilt-pop flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-fuchsia-200">
+                      <span className="live-dot h-2 w-2 rounded-full bg-rose-500" /> On the turntable · press play
+                    </div>
+                    <h2 className="tilt-pop mt-2 text-2xl font-extrabold leading-tight tracking-tight sm:text-3xl">{featured.title}</h2>
+                    <p className="mt-1 text-sm text-zinc-400">Made from a paper on {hostOf(featured.url)}</p>
+                    <div className="mt-6">
+                      <Player src={featured.audio_url} seed={featured.id} big />
+                    </div>
+                    {featured.takeaways && featured.takeaways[0] && (
+                      <p className="mt-5 rounded-2xl border border-white/10 bg-black/30 p-3 text-sm text-zinc-300">
+                        <b className="text-fuchsia-200">Takeaway:</b> {featured.takeaways[0]}
+                      </p>
+                    )}
+                  </>
+                ) : (
+                  <div className="grid place-items-center py-6" aria-hidden>
+                    <div className="bob w-52">
+                      <Vinyl seed="hero" spinning />
+                    </div>
+                    <div className="mt-6">
+                      <Equalizer on large />
+                    </div>
+                  </div>
+                )}
+              </div>
+          </section>
+        </Reveal>
+      )}
 
       {/* ----------------------------------------------------------- try */}
       <Reveal>

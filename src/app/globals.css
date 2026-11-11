@@ -186,3 +186,35 @@ body {
   .reveal { opacity: 1; transform: none; }
   .tilt { transform: none; }
 }
+
+/* ======================================================================
+   WebGL backdrop, custom cursor, per-letter headline
+   ====================================================================== */
+.scene3d { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
+.scene3d canvas { display: block; width: 100%; height: 100%; }
+.scene3d::after { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse 85% 75% at 50% 45%, transparent 40%, rgb(8 6 15 / 0.85) 100%); }
+/* With the 3D record running, the flat decorations step back. */
+html.has-3d .note { display: none; }
+html.has-3d .blob { opacity: 0.2; }
+html.has-3d .spot { display: none; }
+html.has-3d .glass { background: rgb(20 16 34 / 0.5); backdrop-filter: blur(18px) saturate(1.3); }
+
+.cursor-dot { position: fixed; left: -9px; top: -9px; width: 18px; height: 18px; border-radius: 9999px; background: #fff; mix-blend-mode: difference; pointer-events: none; z-index: 100; opacity: 0; transition: width 0.25s ease, height 0.25s ease, left 0.25s ease, top 0.25s ease, opacity 0.3s ease; will-change: transform; }
+.cursor-dot.on { opacity: 1; }
+.cursor-dot.big { width: 58px; height: 58px; left: -29px; top: -29px; }
+
+.chars { display: inline-block; perspective: 600px; }
+.char { display: inline-block; opacity: 0; transform: translateY(0.7em) rotateX(-80deg); transform-origin: 50% 100%; animation: char 0.75s cubic-bezier(0.2, 0.9, 0.2, 1) forwards; white-space: pre; }
+@keyframes char { to { opacity: 1; transform: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .char { opacity: 1; transform: none; }
+  .cursor-dot { display: none; }
+}
+
+/* The label under the 3D scene follows the transformation (--morph is set by the scene each frame). */
+.morph-hud { opacity: 0; transition: opacity 0.8s ease; }
+html.has-3d .morph-hud { opacity: 1; }
+.morph-bar { width: calc(var(--morph, 0) * 100%); }
+.morph-a { color: #e9d5ff; opacity: calc(1 - var(--morph, 0) * 0.7); }
+.morph-b { color: #f0abfc; opacity: calc(0.3 + var(--morph, 0) * 0.7); }
