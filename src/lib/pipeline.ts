@@ -8,8 +8,66 @@ async function readError(res: Response) {
   return `${res.status} ${res.statusText}${text ? `: ${text.slice(0, 300)}` : ""}`;
 }
 
-/** 1. Firecrawl: URL -> clean markdown */
-export async function scrape(url: string): Promise<{ markdown: string; title?: string }> {
+export type SourceKind = "article" | "paper";
+
+const PAPER_HOSTS =
+  /(^|\.)(arxiv\.org|biorxiv\.org|medrxiv\.org|openreview\.net|aclanthology\.org|doi\.org|ncbi\.nlm\.nih\.gov|semanticscholar\.org|ssrn\.com|nature\.com|sciencedirect\.com|acm\.org|ieee\.org)$/i;
+
+/** Landing pages only carry the abstract, so read the full text where we know how to find it. */
+export function fullTextUrl(url: string): string {
+  try {
+    const u = new URL(url);
+    if (/(^|\.)arxiv\.org$/i.test(u.hostname)) {
+      const m = u.pathname.match(/^\/abs\/(.+)$/);
+      if (m) return `https://arxiv.org/pdf/${m[1]}`;
+    }
+    if (/(^|\.)openreview\.net$/i.test(u.hostname) && u.pathname === "/forum" && u.searchParams.get("id")) {
+      return `https://openreview.net/pdf?id=${u.searchParams.get("id")}`;
+    }
+    if (/(^|\.)(biorxiv|medrxiv)\.org$/i.test(u.hostname) && /^\/content\//.test(u.pathname) && !/\.full(\.pdf)?$/.test(u.pathname)) {
+      return `${u.origin}${u.pathname}.full`;
+    }
+  } catch {}
+  return url;
+}
+
+function looksLikePaper(url: string, markdown: string, contentType?: string): boolean {
+  let host = "";
+  try {
+    host = new URL(url).hostname;
+  } catch {}
+  if (PAPER_HOSTS.test(host)) return true;
+  const hasAbstract = /\babstract\b/i.test(markdown.slice(0, 4000));
+  const hasRefs = /^\s*(#+\s*)?(references|bibliography)\s*$/im.test(markdown);
+  return (hasAbstract && hasRefs) || (Boolean(contentType?.includes("pdf")) && hasRefs);
+}
+
+/**
+ * Papers are long and the useful parts sit at both ends: drop the reference
+ * list and appendices, then keep the opening (abstract, intro, method) and the
+ * closing (results, discussion, conclusion) instead of only the first N chars.
+ */
+export function fitPaper(markdown: string, max: number): string {
+  const lines = markdown.split("\n");
+  let cut = -1;
+  for (let i = lines.length - 1; i > lines.length * 0.4; i--) {
+    if (/^\s*(#+\s*)?(\d+\.?\s*)?(references|bibliography)\s*$/i.test(lines[i])) {
+      cut = i;
+      break;
+    }
+  }
+  const body = (cut > 0 ? lines.slice(0, cut) : lines).join("\n");
+  if (body.length <= max) return body;
+  const head = Math.floor(max * 0.6);
+  const tail = max - head;
+  return `${body.slice(0, head)}\n\n[... middle of the paper omitted ...]\n\n${body.slice(-tail)}`;
+}
+
+/** 1. Firecrawl: URL -> clean markdown (web pages and PDFs) */
+export async function scrape(
+  inputUrl: string,
+): Promise<{ markdown: string; title?: string; kind: SourceKind }> {
+  const url = fullTextUrl(inputUrl);
   const body = JSON.stringify({ url, formats: ["markdown"], onlyMainContent: true });
   const headers = {
     Authorization: `Bearer ${env.firecrawlKey()}`,
@@ -26,7 +84,11 @@ export async function scrape(url: string): Promise<{ markdown: string; title?: s
   if (!markdown || markdown.trim().length < 200) {
     throw new Error("Couldn't extract enough article text from that page. Try a different link.");
   }
-  return { markdown, title: json?.data?.metadata?.title || json?.data?.metadata?.ogTitle };
+  const meta = json?.data?.metadata ?? {};
+  const kind: SourceKind = looksLikePaper(url, markdown, meta.contentType) ? "paper" : "article";
+  // PDFs carry no page title: fall back to the first heading.
+  const heading = markdown.match(/^#\s+(.+)$/m)?.[1]?.trim();
+  return { markdown, title: meta.title || meta.ogTitle || heading, kind };
 }
 
 export type Listener = { role?: string; goal?: string };
@@ -37,6 +99,7 @@ export async function writeScript(
   sourceUrl: string,
   pageTitle?: string,
   listener: Listener = {},
+  kind: SourceKind = "article",
 ): Promise<{ title: string; script: string; takeaways: string[]; action: string | null }> {
   const role = listener.role?.trim().slice(0, 200);
   const goal = listener.goal?.trim().slice(0, 300);
@@ -46,6 +109,19 @@ export async function writeScript(
         `Pick the parts of the article that matter for them, explain why in passing, and skip what does not. ` +
         `Speak to them as "you". Never invent facts the article does not contain, and never read their role or goal back verbatim. `
       : "";
+  const isPaper = kind === "paper";
+  const brief = isPaper
+    ? `You turn research papers into short solo podcast episodes for a smart listener who is not a specialist. ` +
+      `Write a warm, conversational script for ONE host to read aloud, at most ${MAX_SCRIPT_WORDS} words. ` +
+      `Open with the question the paper tries to answer and why anyone should care. Then say what the authors ` +
+      `actually did, the main result with one or two real numbers from the paper, and one honest limitation or ` +
+      `open question. Explain any term a newcomer would not know in a few plain words. Do not overstate: say ` +
+      `"the authors report" rather than presenting findings as settled fact, and never invent numbers. ` +
+      `Skip author lists, affiliations, citations, equations and section names. Close with a one-line takeaway. `
+    : `You turn articles into short solo podcast episodes. Write a warm, conversational script ` +
+      `for ONE host to read aloud, at most ${MAX_SCRIPT_WORDS} words. Open with a hook, cover the ` +
+      `key points accurately, close with a one-line takeaway. `;
+  const source = isPaper ? fitPaper(markdown, MAX_INPUT_CHARS) : markdown.slice(0, MAX_INPUT_CHARS);
   const models = env.openrouterModels();
   const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
     method: "POST",
@@ -61,9 +137,7 @@ export async function writeScript(
         {
           role: "system",
           content:
-            `You turn articles into short solo podcast episodes. Write a warm, conversational script ` +
-            `for ONE host to read aloud, at most ${MAX_SCRIPT_WORDS} words. Open with a hook, cover the ` +
-            `key points accurately, close with a one-line takeaway. ${forWhom}Plain spoken English only: no ` +
+            `${brief}${forWhom}Plain spoken English only: no ` +
             `markdown, no headings, no bullet points, no URLs, no stage directions, no emojis. ` +
             `Reply with JSON only: {"title": "<catchy episode title, max 8 words>", "script": "<script>", ` +
             `"takeaways": ["<three short takeaways, max 18 words each, grounded in the article>"], ` +
@@ -71,7 +145,7 @@ export async function writeScript(
         },
         {
           role: "user",
-          content: `Source: ${sourceUrl}\nPage title: ${pageTitle ?? "unknown"}\n\nArticle:\n${markdown.slice(0, MAX_INPUT_CHARS)}`,
+          content: `Source: ${sourceUrl}\nTitle: ${pageTitle ?? "unknown"}\n\n${isPaper ? "Paper" : "Article"}:\n${source}`,
         },
       ],
     }),

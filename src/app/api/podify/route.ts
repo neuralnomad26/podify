@@ -50,6 +50,7 @@ export async function POST(req: Request) {
           parsed.toString(),
           article.title,
           profile ?? {},
+          article.kind,
         );
 
         send({ step: "recording" });

@@ -8,7 +8,7 @@ import { coverGradient, hostOf } from "@/lib/cover";
 type Step = "idle" | "scraping" | "writing" | "recording" | "saving";
 
 const STEPS: { key: Exclude<Step, "idle">; label: string; icon: string }[] = [
-  { key: "scraping", label: "Reading the article", icon: "📰" },
+  { key: "scraping", label: "Reading the source", icon: "📰" },
   { key: "writing", label: "Writing the script", icon: "✍️" },
   { key: "recording", label: "Recording the voice", icon: "🎙️" },
   { key: "saving", label: "Publishing episode", icon: "📡" },
@@ -230,7 +230,7 @@ function Studio({ supabase, session }: { supabase: SupabaseClient; session: Sess
         onSubmit={podify}
         className="rounded-3xl border border-zinc-800 bg-gradient-to-br from-zinc-900 to-zinc-950 p-6 shadow-2xl"
       >
-        <label className="text-sm font-medium text-zinc-400">Paste an article link</label>
+        <label className="text-sm font-medium text-zinc-400">Paste an article or research paper link</label>
         <div className="mt-2 flex flex-col gap-3 sm:flex-row">
           <input
             type="url"
@@ -280,7 +280,7 @@ function Studio({ supabase, session }: { supabase: SupabaseClient; session: Sess
       {loading ? (
         <p className="mt-4 text-zinc-500">Loading…</p>
       ) : episodes.length === 0 ? (
-        <p className="mt-4 text-zinc-500">No episodes yet — podify your first article above.</p>
+        <p className="mt-4 text-zinc-500">No episodes yet. Podify your first article or paper above (arXiv and PDF links work).</p>
       ) : (
         <div className="mt-5 grid gap-5">
           {episodes.map((ep) => (
