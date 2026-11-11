@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import Player from "@/components/Player";
 import { supabaseAdmin, type Episode } from "@/lib/supabase-admin";
-import { coverGradient, hostOf } from "@/lib/cover";
+import { hostOf } from "@/lib/cover";
 
 export const dynamic = "force-dynamic";
 
@@ -26,43 +27,67 @@ export default async function SharedEpisode({ params }: PageProps<"/e/[id]">) {
   if (!ep) notFound();
 
   return (
-    <main className="mx-auto max-w-2xl px-6 py-16">
-      <Link href="/" className="text-sm text-zinc-500 hover:text-zinc-300">
-        🎧 Podify
-      </Link>
-      <div
-        className="mt-6 grid aspect-[2/1] place-items-center rounded-3xl text-7xl shadow-2xl"
-        style={{ background: coverGradient(ep.id) }}
-      >
-        🎙️
+    <>
+      <div className="backdrop" aria-hidden>
+        <div className="blob blob-a" />
+        <div className="blob blob-b" />
+        <div className="blob blob-c" />
       </div>
-      <div className="mt-8 text-xs uppercase tracking-wider text-zinc-500">
-        From {hostOf(ep.url)} · {new Date(ep.created_at).toLocaleDateString()}
-      </div>
-      <h1 className="mt-2 text-4xl font-extrabold tracking-tight">{ep.title}</h1>
-      <audio controls src={ep.audio_url} className="mt-6 w-full" />
-      <div className="mt-4 flex gap-2 text-sm">
-        <a href={ep.url} target="_blank" rel="noreferrer" className="rounded-full border border-zinc-700 px-3 py-1 hover:bg-zinc-800">
-          Read the original ↗
-        </a>
-        <Link href="/" className="rounded-full bg-gradient-to-r from-violet-500 to-fuchsia-500 px-3 py-1 font-semibold">
-          Make your own
+      <main className="mx-auto max-w-3xl px-6 py-10">
+        <Link href="/" className="rise inline-flex items-center gap-2 text-lg font-extrabold tracking-tight">
+          <span className="hot grid h-9 w-9 place-items-center rounded-xl text-lg">
+            <span className="wobble">🎧</span>
+          </span>
+          Podify
         </Link>
-      </div>
-      {ep.takeaways && ep.takeaways.length > 0 && (
-        <section className="mt-8 rounded-2xl border border-zinc-800 bg-zinc-900/60 p-5">
-          <h2 className="font-semibold">Takeaways</h2>
-          <ol className="mt-3 list-decimal space-y-1 pl-5 text-zinc-300">
-            {ep.takeaways.map((t, i) => (
-              <li key={i}>{t}</li>
-            ))}
-          </ol>
-        </section>
-      )}
-      <details className="mt-8 rounded-2xl border border-zinc-800 bg-zinc-900/60 p-5">
-        <summary className="cursor-pointer font-semibold">Transcript</summary>
-        <p className="mt-3 whitespace-pre-line leading-relaxed text-zinc-300">{ep.script}</p>
-      </details>
-    </main>
+
+        <article className="rise glass glow-ring mt-8 rounded-3xl p-6 sm:p-9" style={{ animationDelay: "120ms" }}>
+          <div className="text-xs uppercase tracking-wider text-zinc-500">
+            From {hostOf(ep.url)} · {new Date(ep.created_at).toLocaleDateString()}
+          </div>
+          <h1 className="mt-2 text-3xl font-extrabold tracking-tight sm:text-5xl">{ep.title}</h1>
+          <div className="mt-8">
+            <Player src={ep.audio_url} seed={ep.id} big />
+          </div>
+          <div className="mt-7 flex flex-wrap gap-2 text-sm">
+            <a href={ep.url} target="_blank" rel="noreferrer" className="btn rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-zinc-200">
+              Read the original ↗
+            </a>
+            <Link href="/" className="btn hot rounded-full px-4 py-1.5 font-bold text-white">
+              Make your own ✨
+            </Link>
+          </div>
+        </article>
+
+        {(ep.takeaways?.length || ep.action) && (
+          <div className="rise mt-5 grid gap-4 md:grid-cols-[1.4fr_1fr]" style={{ animationDelay: "240ms" }}>
+            {ep.takeaways && ep.takeaways.length > 0 && (
+              <section className="glass rounded-3xl p-5">
+                <h2 className="font-bold">Takeaways</h2>
+                <ol className="mt-3 space-y-2 text-sm">
+                  {ep.takeaways.map((t, i) => (
+                    <li key={i} className="flex gap-3">
+                      <span className="hot grid h-6 w-6 shrink-0 place-items-center rounded-full text-xs font-bold text-white">{i + 1}</span>
+                      <span className="text-zinc-200">{t}</span>
+                    </li>
+                  ))}
+                </ol>
+              </section>
+            )}
+            {ep.action && (
+              <div className="note-card h-fit rounded-2xl bg-amber-300 p-5 text-sm text-amber-950 shadow-lg shadow-amber-500/20">
+                <div className="text-xs font-black uppercase tracking-wider">📌 Try this week</div>
+                <p className="mt-1.5 font-medium leading-snug">{ep.action}</p>
+              </div>
+            )}
+          </div>
+        )}
+
+        <details className="rise glass mt-5 rounded-3xl p-5" style={{ animationDelay: "320ms" }}>
+          <summary className="cursor-pointer font-bold">📜 Transcript</summary>
+          <p className="mt-3 whitespace-pre-line leading-relaxed text-zinc-300">{ep.script}</p>
+        </details>
+      </main>
+    </>
   );
 }
