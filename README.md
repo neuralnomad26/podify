@@ -114,6 +114,41 @@ flowchart LR
 
 The whole stack, as shared: [projects.dev/s#v1:ElevenLabs~tts,Firecrawl~api,OpenRouter~api,Supabase~project,Vercel~project](https://projects.dev/s#v1:ElevenLabs~tts,Firecrawl~api,OpenRouter~api,Supabase~project,Vercel~project)
 
+### What Stripe Projects left in this repo
+
+Stripe Projects did not write the app, but it is the reason the app could be built and deployed in one sitting. You can see its fingerprints in the tree:
+
+| In the repo | What it is | Why it matters |
+|---|---|---|
+| `.projects/state.json` | The project's declared stack | Records which providers and services the project uses |
+| `.projects/state.local.json` | Project, provider and resource IDs (no credentials) | Identifies this folder as the Stripe project `podify`, so `stripe projects status` and `stripe projects env --pull` work straight after a clone |
+| `.projects/vault/` (gitignored) | Encrypted credentials | Keys never have to be pasted into chat, email or a README |
+| `.env` (gitignored) | Every provider key, written by one command | No dashboard-hopping to copy keys |
+| `AGENTS.md` (Stripe Projects section) | Tells coding agents this repo is managed with the CLI | An agent knows to provision through Stripe Projects instead of guessing |
+| `.agents/skills/stripe-projects-cli/` | The CLI's own usage guide for agents | Correct commands, plan ordering and error codes without trial and error |
+| `.agents/skills/sp-supabase/`, `sp-vercel/`, `sp-openrouter/` | Provider guidance fetched by `stripe projects llm-context` | The agent works from each provider's current docs |
+
+### How the build actually went
+
+```mermaid
+flowchart TD
+    A["stripe projects catalog<br/>confirm provider + plan names"] --> B["stripe projects init podify"]
+    B --> C["stripe projects add ...<br/>5 providers, free plans"]
+    C --> D["stripe projects env --pull<br/>26 variables into .env"]
+    D --> E["Agent reads the generated skills<br/>and AGENTS.md"]
+    E --> F["Aliases added in src/lib/env.ts<br/>for the names the CLI wrote"]
+    F --> G["Schema run on Supabase,<br/>keys set on Vercel"]
+    G --> H["/api/health all green"]
+    H --> I["Features built on top:<br/>personalised scripts, private feed, papers"]
+    I --> J["vercel deploy --prod"]
+    J --> K["stripe projects share"]
+
+    classDef stripe fill:#635bff,stroke:#635bff,color:#fff
+    class A,B,C,D,K stripe
+```
+
+Purple steps are Stripe Projects commands. Everything a new service normally costs you (an account, a plan choice, an API key, a place to keep it) collapsed into those five steps, which left the time for the parts that make Podify different.
+
 Stripe Projects names some variables after the resource (for example `FIRECRAWL_API_API_KEY`, `SUPABASE_PROJECT_URL`). Rather than rename anything, `src/lib/env.ts` accepts a list of aliases per setting, so the app runs on whatever the CLI writes.
 
 ## The stack
