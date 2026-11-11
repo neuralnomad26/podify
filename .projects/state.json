@@ -1,0 +1,70 @@
+{
+  "version": 2,
+  "providers": {
+    "elevenlabs": {
+      "name": "ElevenLabs"
+    },
+    "firecrawl": {
+      "name": "Firecrawl"
+    },
+    "openrouter": {
+      "name": "OpenRouter"
+    },
+    "supabase": {
+      "name": "Supabase"
+    },
+    "vercel": {
+      "name": "Vercel"
+    }
+  },
+  "resources": {
+    "elevenlabs-tts": {
+      "livemode": true,
+      "name": "elevenlabs-tts",
+      "providerName": "ElevenLabs",
+      "serviceId": "tts"
+    },
+    "firecrawl-api": {
+      "livemode": true,
+      "name": "firecrawl-api",
+      "providerName": "Firecrawl",
+      "serviceId": "api"
+    },
+    "firecrawl-plan": {
+      "livemode": true,
+      "name": "firecrawl-plan",
+      "providerName": "Firecrawl",
+      "serviceId": "free"
+    },
+    "openrouter-api": {
+      "livemode": true,
+      "name": "openrouter-api",
+      "providerName": "OpenRouter",
+      "serviceId": "api"
+    },
+    "podify": {
+      "livemode": true,
+      "name": "podify",
+      "providerName": "Supabase",
+      "serviceId": "project"
+    },
+    "podify-2": {
+      "livemode": true,
+      "name": "podify-2",
+      "providerName": "Vercel",
+      "serviceId": "project"
+    },
+    "supabase-plan": {
+      "livemode": true,
+      "name": "supabase-plan",
+      "providerName": "Supabase",
+      "serviceId": "free"
+    },
+    "vercel-plan": {
+      "livemode": true,
+      "name": "vercel-plan",
+      "providerName": "Vercel",
+      "serviceId": "hobby"
+    }
+  }
+}
