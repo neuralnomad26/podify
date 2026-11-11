@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 240" width="1280" height="240" role="img" aria-label="How Podify works: paste a link, Firecrawl reads it, OpenRouter writes the script, ElevenLabs records it, Supabase stores it, and it arrives in your podcast app">
+  <rect width="1280" height="240" rx="24" fill="#0b0b12"/>
+  <g font-family="ui-sans-serif, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif">
+    <text x="30" y="46" font-size="15" letter-spacing="4" fill="#a78bfa" font-weight="600">FROM LINK TO EARBUDS IN ABOUT A MINUTE</text>
+    <g>
+    <rect x="30.0" y="78" width="178" height="112" rx="18" fill="#15131f" stroke="#8b5cf6" stroke-width="2"/>
+    <circle cx="58.0" cy="108" r="14" fill="#8b5cf6"/>
+    <text x="58.0" y="113" font-size="15" font-weight="700" fill="#fff" text-anchor="middle">1</text>
+    <text x="46.0" y="150" font-size="18" font-weight="700" fill="#f5f3ff">Paste a link</text>
+    <text x="46.0" y="173" font-size="13.5" fill="#a1a1aa">article, arXiv, PDF</text>
+  </g><path d="M214.0 134 H225.4" stroke="#52525b" stroke-width="2" stroke-linecap="round"/><path d="M224.4 128 L232.4 134 L224.4 140" fill="none" stroke="#52525b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><g>
+    <rect x="238.4" y="78" width="178" height="112" rx="18" fill="#15131f" stroke="#a855f7" stroke-width="2"/>
+    <circle cx="266.4" cy="108" r="14" fill="#a855f7"/>
+    <text x="266.4" y="113" font-size="15" font-weight="700" fill="#fff" text-anchor="middle">2</text>
+    <text x="254.4" y="150" font-size="18" font-weight="700" fill="#f5f3ff">Firecrawl</text>
+    <text x="254.4" y="173" font-size="13.5" fill="#a1a1aa">reads the full text</text>
+  </g><path d="M422.4 134 H433.8" stroke="#52525b" stroke-width="2" stroke-linecap="round"/><path d="M432.8 128 L440.8 134 L432.8 140" fill="none" stroke="#52525b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><g>
+    <rect x="446.8" y="78" width="178" height="112" rx="18" fill="#15131f" stroke="#c026d3" stroke-width="2"/>
+    <circle cx="474.8" cy="108" r="14" fill="#c026d3"/>
+    <text x="474.8" y="113" font-size="15" font-weight="700" fill="#fff" text-anchor="middle">3</text>
+    <text x="462.8" y="150" font-size="18" font-weight="700" fill="#f5f3ff">OpenRouter</text>
+    <text x="462.8" y="173" font-size="13.5" fill="#a1a1aa">writes it for you</text>
+  </g><path d="M630.8 134 H642.2" stroke="#52525b" stroke-width="2" stroke-linecap="round"/><path d="M641.2 128 L649.2 134 L641.2 140" fill="none" stroke="#52525b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><g>
+    <rect x="655.2" y="78" width="178" height="112" rx="18" fill="#15131f" stroke="#db2777" stroke-width="2"/>
+    <circle cx="683.2" cy="108" r="14" fill="#db2777"/>
+    <text x="683.2" y="113" font-size="15" font-weight="700" fill="#fff" text-anchor="middle">4</text>
+    <text x="671.2" y="150" font-size="18" font-weight="700" fill="#f5f3ff">ElevenLabs</text>
+    <text x="671.2" y="173" font-size="13.5" fill="#a1a1aa">records the voice</text>
+  </g><path d="M839.2 134 H850.6" stroke="#52525b" stroke-width="2" stroke-linecap="round"/><path d="M849.6 128 L857.6 134 L849.6 140" fill="none" stroke="#52525b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><g>
+    <rect x="863.6" y="78" width="178" height="112" rx="18" fill="#15131f" stroke="#e11d48" stroke-width="2"/>
+    <circle cx="891.6" cy="108" r="14" fill="#e11d48"/>
+    <text x="891.6" y="113" font-size="15" font-weight="700" fill="#fff" text-anchor="middle">5</text>
+    <text x="879.6" y="150" font-size="18" font-weight="700" fill="#f5f3ff">Supabase</text>
+    <text x="879.6" y="173" font-size="13.5" fill="#a1a1aa">stores it privately</text>
+  </g><path d="M1047.6 134 H1059.0" stroke="#52525b" stroke-width="2" stroke-linecap="round"/><path d="M1058.0 128 L1066.0 134 L1058.0 140" fill="none" stroke="#52525b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><g>
+    <rect x="1072.0" y="78" width="178" height="112" rx="18" fill="#15131f" stroke="#f43f5e" stroke-width="2"/>
+    <circle cx="1100.0" cy="108" r="14" fill="#f43f5e"/>
+    <text x="1100.0" y="113" font-size="15" font-weight="700" fill="#fff" text-anchor="middle">6</text>
+    <text x="1088.0" y="150" font-size="18" font-weight="700" fill="#f5f3ff">Your podcast app</text>
+    <text x="1088.0" y="173" font-size="13.5" fill="#a1a1aa">via a private feed</text>
+  </g>
+    <text x="30" y="224" font-size="13.5" fill="#71717a">Every provider above was provisioned, and its credentials delivered, by one Stripe Projects workflow.</text>
+  </g>
+</svg>
