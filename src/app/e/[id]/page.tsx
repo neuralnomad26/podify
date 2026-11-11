@@ -17,7 +17,7 @@ async function getEpisode(id: string): Promise<Episode | null> {
 export async function generateMetadata({ params }: PageProps<"/e/[id]">): Promise<Metadata> {
   const ep = await getEpisode((await params).id);
   return ep
-    ? { title: `${ep.title} · Podify`, description: `A 2-minute audio take on ${hostOf(ep.url)}` }
+    ? { title: `${ep.title} · Podify`, description: `A two-minute audio explainer of a paper from ${hostOf(ep.url)}` }
     : { title: "Episode not found · Podify" };
 }
 

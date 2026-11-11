@@ -104,15 +104,15 @@ function AuthCard({ supabase }: { supabase: SupabaseClient }) {
     <div className="grid items-center gap-12 pt-10 md:grid-cols-2">
       <div>
         <h1 className="text-5xl font-extrabold leading-tight tracking-tight">
-          Any article.
+          Any research paper.
           <br />
           <span className="bg-gradient-to-r from-violet-400 to-fuchsia-400 bg-clip-text text-transparent">
-            A podcast in seconds.
+            A podcast episode in a minute.
           </span>
         </h1>
         <p className="mt-5 text-lg text-zinc-400">
-          Paste a link. Podify reads it, writes a two-minute script, and records it in a natural
-          voice — ready to listen to or share.
+          Paste an arXiv or PDF link. Podify reads the whole paper, explains what the authors did and
+          found in two minutes, and records it in a natural voice. Articles work too.
         </p>
       </div>
       <form onSubmit={submit} className="rounded-3xl border border-zinc-800 bg-zinc-900/60 p-6 shadow-2xl">
@@ -230,13 +230,13 @@ function Studio({ supabase, session }: { supabase: SupabaseClient; session: Sess
         onSubmit={podify}
         className="rounded-3xl border border-zinc-800 bg-gradient-to-br from-zinc-900 to-zinc-950 p-6 shadow-2xl"
       >
-        <label className="text-sm font-medium text-zinc-400">Paste an article or research paper link</label>
+        <label className="text-sm font-medium text-zinc-400">Paste a research paper link (arXiv, OpenReview, PDF) or any article</label>
         <div className="mt-2 flex flex-col gap-3 sm:flex-row">
           <input
             type="url"
             required
             disabled={busy}
-            placeholder="https://…"
+            placeholder="https://arxiv.org/abs/1706.03762"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             className="flex-1 rounded-xl border border-zinc-700 bg-zinc-950 px-4 py-3 outline-none focus:border-violet-500 disabled:opacity-60"
@@ -280,7 +280,7 @@ function Studio({ supabase, session }: { supabase: SupabaseClient; session: Sess
       {loading ? (
         <p className="mt-4 text-zinc-500">Loading…</p>
       ) : episodes.length === 0 ? (
-        <p className="mt-4 text-zinc-500">No episodes yet. Podify your first article or paper above (arXiv and PDF links work).</p>
+        <p className="mt-4 text-zinc-500">No episodes yet. Paste your first paper above (arXiv, OpenReview and PDF links work).</p>
       ) : (
         <div className="mt-5 grid gap-5">
           {episodes.map((ep) => (

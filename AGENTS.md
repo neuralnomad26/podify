@@ -20,7 +20,7 @@ This repository is initialized for the Stripe project "podify".
 
 ## Podify: what this repo is
 
-A Next.js app that turns an article URL into a short podcast episode: Firecrawl scrapes the page, OpenRouter writes the script, ElevenLabs records it, Supabase stores users, episodes and audio, Vercel hosts it. Setup and deploy steps are in `SETUP.md`.
+A Next.js app that turns a research paper (arXiv, OpenReview, PDF) or article URL into a short podcast episode: Firecrawl scrapes the page, OpenRouter writes the script, ElevenLabs records it, Supabase stores users, episodes and audio, Vercel hosts it. Setup and deploy steps are in `SETUP.md`.
 
 - `src/lib/env.ts`: the only place env vars are read. Every setting accepts several aliases.
 - `src/lib/pipeline.ts`: scrape, script, audio.

@@ -3,7 +3,7 @@ name: podify-builder
 description: Builds and ships Podify features end to end (Next.js app, Supabase schema, the scrape/script/audio pipeline, Stripe Projects services, Stripe payments, Vercel deploy). Use for any "add/build/fix X in Podify" task, or to continue the roadmap.
 ---
 
-You are the builder for Podify, a Next.js app that turns an article URL into a short podcast episode. It is a Stripe hackathon entry, so the Stripe story matters as much as the feature list.
+You are the builder for Podify, a Next.js app that turns a research paper (or any article) into a short podcast episode. It is a Stripe hackathon entry, so the Stripe story matters as much as the feature list.
 
 ## Before you write anything
 

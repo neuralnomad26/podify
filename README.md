@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/banner.svg" alt="Podify: any article or research paper, turned into a short episode written for you" width="100%">
+  <img src="docs/banner.svg" alt="Podify: any research paper, turned into a short podcast episode written for you" width="100%">
 </p>
 
 <p align="center">
@@ -10,14 +10,14 @@
 </p>
 
 <p align="center">
-  <b>Paste a link. Get a two-minute episode that knows who is listening,<br>ends with something to do, and shows up in the podcast app you already use.</b>
+  <b>Paste a paper. Get a two-minute episode that explains it for you,<br>ends with something to do, and shows up in the podcast app you already use.</b>
 </p>
 
 ---
 
 ## The problem
 
-Your reading list is a graveyard. Forty open tabs, a folder of "must read" papers, and no hour in the day to sit and read any of it. You do have time when your eyes are busy and your ears are not: the commute, the dishes, the walk.
+Research moves faster than anyone can read it. You have a folder of "must read" PDFs, a dozen arXiv tabs, and no spare hour to sit with twelve dense pages of notation. You do have time when your eyes are busy and your ears are not: the commute, the dishes, the walk.
 
 Tools that turn documents into audio already exist. Most of them give everyone the same summary, in an app you have to remember to open, and when it ends you have learned something and changed nothing.
 
@@ -25,11 +25,12 @@ Tools that turn documents into audio already exist. Most of them give everyone t
 
 | | |
 |---|---|
-| 🎯 **Written for you** | Tell Podify who you are and what you are working towards, once. Every script is then cut around that: it keeps what matters to you, skips what does not, and speaks to you directly. |
+| 🔬 **Reads the whole paper, not the abstract** | Paste an arXiv, OpenReview or PDF link. Podify fetches the full text, keeps the opening and the conclusions, and explains the question, the method, the headline result with real numbers, and one honest limitation. Jargon gets explained in passing. |
+| 🎯 **Written for you** | Tell Podify who you are and what you are working towards, once. A founder and a PhD student get different episodes from the same paper: each keeps what matters to that listener and skips what does not. |
 | ✅ **Ends with a next step** | Each episode comes with three takeaways and one concrete thing to try this week. Listening is supposed to lead somewhere. |
 | 📡 **Lives in your podcast app** | Every account gets a private RSS feed. Add it once to Apple Podcasts, Overcast, Pocket Casts or any app that takes a feed URL, and new episodes simply appear there. |
-| 🔬 **Reads research papers properly** | Paste an arXiv, OpenReview or PDF link. Podify fetches the full text, keeps the opening and the conclusions, and explains the question, the method, the headline result with real numbers, and one honest limitation. |
 | 🔗 **Shareable** | Every episode has a public page with the audio, takeaways and transcript. No login needed to listen. |
+| 📰 **Articles too** | Any web article works the same way, with a lighter script style. |
 | ⚡ **Fast and free to run** | Roughly a minute from link to audio, on free tiers end to end. |
 
 ## How it works
@@ -261,10 +262,10 @@ Most of this repo was assembled by a coding agent, so the repo also carries the 
 
 ## Roadmap
 
-- [x] Article to episode, with live progress
+- [x] Research paper to episode (arXiv, OpenReview, PDFs), with live progress
 - [x] Episodes written for the listener, with takeaways and an action
 - [x] Private podcast feed
-- [x] Research papers (arXiv, OpenReview, PDFs)
+- [x] Web articles
 - [ ] Podify Pro with Stripe Checkout: free monthly cap, subscription, Customer Portal
 - [ ] Daily digest: several saved links merged into one episode
 - [ ] Two-host conversations and voice choice

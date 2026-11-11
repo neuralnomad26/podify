@@ -7,7 +7,7 @@
     <circle cx="58.0" cy="108" r="14" fill="#8b5cf6"/>
     <text x="58.0" y="113" font-size="15" font-weight="700" fill="#fff" text-anchor="middle">1</text>
     <text x="46.0" y="150" font-size="18" font-weight="700" fill="#f5f3ff">Paste a link</text>
-    <text x="46.0" y="173" font-size="13.5" fill="#a1a1aa">article, arXiv, PDF</text>
+    <text x="46.0" y="173" font-size="13.5" fill="#a1a1aa">arXiv, PDF, article</text>
   </g><path d="M214.0 134 H225.4" stroke="#52525b" stroke-width="2" stroke-linecap="round"/><path d="M224.4 128 L232.4 134 L224.4 140" fill="none" stroke="#52525b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><g>
     <rect x="238.4" y="78" width="178" height="112" rx="18" fill="#15131f" stroke="#a855f7" stroke-width="2"/>
     <circle cx="266.4" cy="108" r="14" fill="#a855f7"/>

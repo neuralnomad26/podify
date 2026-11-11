@@ -11,7 +11,7 @@ const esc = (s: string) =>
   s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&apos;");
 
 function describe(ep: Episode) {
-  const parts = [`A short audio take on an article from ${hostOf(ep.url)}.`];
+  const parts = [`A short audio explainer of a paper or article from ${hostOf(ep.url)}.`];
   if (ep.takeaways?.length) parts.push("Takeaways: " + ep.takeaways.map((t, i) => `${i + 1}. ${t}`).join(" "));
   if (ep.action) parts.push(`Try this: ${ep.action}`);
   parts.push(`Original: ${ep.url}`);
@@ -63,7 +63,7 @@ export async function GET(req: NextRequest, ctx: RouteContext<"/feed/[token]">) 
     <title>My Podify</title>
     <link>${esc(origin)}</link>
     <atom:link href="${esc(self)}" rel="self" type="application/rss+xml"/>
-    <description>Articles I saved, turned into short episodes written for me.</description>
+    <description>Research papers and articles I saved, turned into short episodes written for me.</description>
     <language>en</language>
     <itunes:author>Podify</itunes:author>
     <itunes:explicit>false</itunes:explicit>
