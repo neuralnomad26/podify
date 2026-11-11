@@ -150,3 +150,39 @@ body {
   .rise { opacity: 1; transform: none; }
   .note, .confetti { display: none; }
 }
+
+/* ======================================================================
+   Landing page: spotlight, tilt, marquee, animated borders
+   ====================================================================== */
+.spot { position: fixed; inset: 0; z-index: -1; pointer-events: none; background: radial-gradient(520px circle at var(--mx, 50%) var(--my, 30%), rgb(217 70 239 / 0.16), transparent 65%); transition: background 0.12s linear; }
+.tilt { transform: perspective(1100px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform 0.18s ease-out; transform-style: preserve-3d; will-change: transform; }
+.tilt-pop { transform: translateZ(40px); }
+.ring-border { position: relative; isolation: isolate; }
+.ring-border::before { content: ""; position: absolute; inset: -2px; z-index: -1; border-radius: inherit; background: conic-gradient(from var(--angle, 0deg), #8b5cf6, #ec4899, #f97316, #22d3ee, #8b5cf6); animation: angle 5s linear infinite; filter: blur(0.5px); }
+.ring-border::after { content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; background: #120e1f; }
+@property --angle { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+@keyframes angle { to { --angle: 360deg; } }
+.marquee { display: flex; width: max-content; animation: marquee 46s linear infinite; }
+.marquee.rev { animation-direction: reverse; animation-duration: 58s; }
+.marquee:hover { animation-play-state: paused; }
+@keyframes marquee { to { transform: translateX(-50%); } }
+.fade-x { mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); }
+.reveal { opacity: 0; transform: translateY(34px) scale(0.98); transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.reveal.in { opacity: 1; transform: none; }
+.wave path { animation: wave 9s ease-in-out infinite alternate; transform-origin: center; }
+.wave path:nth-child(2) { animation-duration: 12s; animation-delay: -3s; }
+.wave path:nth-child(3) { animation-duration: 15s; animation-delay: -6s; }
+@keyframes wave { from { transform: translateX(-3%) scaleY(0.8); } to { transform: translateX(3%) scaleY(1.25); } }
+.persona { transition: transform 0.18s cubic-bezier(0.2, 1.6, 0.4, 1), background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease; }
+.persona:hover { transform: translateY(-3px) scale(1.04); }
+.persona.sel { background: linear-gradient(120deg, rgb(139 92 246 / 0.5), rgb(236 72 153 / 0.5)); border-color: #f0abfc; box-shadow: 0 10px 34px -10px rgb(217 70 239 / 0.9); transform: scale(1.06); }
+.big-num { font-variant-numeric: tabular-nums; background: linear-gradient(180deg, #fff, #c4b5fd); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.jelly:hover { animation: jelly 0.6s ease; }
+@keyframes jelly { 0%, 100% { transform: scale(1); } 30% { transform: scale(1.12, 0.9); } 50% { transform: scale(0.94, 1.08); } 70% { transform: scale(1.04, 0.97); } }
+.scroll-cue { animation: cue 1.8s ease-in-out infinite; }
+@keyframes cue { 50% { transform: translateY(8px); opacity: 0.5; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; }
+  .tilt { transform: none; }
+}

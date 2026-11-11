@@ -64,3 +64,11 @@ revoke insert, update on public.profiles from authenticated, anon;
 grant select on public.profiles to authenticated;
 grant insert (user_id, role, goal) on public.profiles to authenticated;
 grant update (role, goal, updated_at) on public.profiles to authenticated;
+
+-- ---------------------------------------------------------------------------
+-- Guest mode + featured episode. Safe to run more than once.
+-- Guests can press a few records without an account: those rows have no owner.
+alter table public.episodes alter column user_id drop not null;
+alter table public.episodes add column if not exists guest_ip_hash text;
+alter table public.episodes add column if not exists featured boolean not null default false;
+create index if not exists episodes_guest_idx on public.episodes (created_at desc) where user_id is null;

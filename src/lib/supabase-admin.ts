@@ -5,7 +5,8 @@ export const BUCKET = "episodes";
 
 export type Episode = {
   id: string;
-  user_id: string;
+  /** null for records pressed by a guest (no account). */
+  user_id: string | null;
   url: string;
   title: string;
   script: string;
@@ -14,6 +15,7 @@ export type Episode = {
   takeaways: string[] | null;
   action: string | null;
   audio_bytes: number | null;
+  featured?: boolean;
 };
 
 export type Profile = {
