@@ -282,8 +282,8 @@ function Landing({ supabase, featured, total }: { supabase: SupabaseClient; feat
             Paste a link to <span className="caret font-semibold text-white">{typed}</span>
           </p>
           <p className="rise mt-3 max-w-xl text-zinc-400" style={{ animationDelay: "320ms" }}>
-            Podify reads the whole paper and turns it into a two-minute episode, written for who you are, with three takeaways and one
-            thing to try.
+            Podify reads the whole paper and turns it into a two-minute episode written for who you are. Then study it: a plain-English
+            breakdown, a quiz, and answers to your questions quoted straight from the paper.
           </p>
           <div className="rise mt-8 flex flex-wrap items-center gap-3" style={{ animationDelay: "400ms" }}>
             <a href="#try" className="btn hot rounded-2xl px-7 py-4 text-lg font-bold text-white shadow-xl shadow-fuchsia-500/40">
@@ -374,7 +374,7 @@ function Landing({ supabase, featured, total }: { supabase: SupabaseClient; feat
             ["📄", "flip", "It reads everything", "The full text, not the abstract. References get dropped; the results and conclusions stay."],
             ["✍️", "scribble", "It writes for you", "The question, what the authors did, the headline number, one honest limitation. Jargon explained."],
             ["🎙️", "pulse-mic", "It records", "A natural voice, about two minutes, ready before your coffee is."],
-            ["💿", "beam", "It lands in your app", "A private podcast feed. Add it once and every new record shows up there."],
+            ["🧠", "beam", "You study it", "A breakdown, the key numbers, a quiz, and a Q&A where every answer shows the exact lines it came from."],
           ].map(([icon, anim, title, body], i) => (
             <Reveal key={title} delay={i * 110}>
               <div className="glass lift group h-full rounded-3xl p-6">
@@ -630,7 +630,7 @@ function Studio({ supabase, session }: { supabase: SupabaseClient; session: Sess
     let alive = true;
     supabase
       .from("episodes")
-      .select("*")
+      .select("id, user_id, url, title, script, audio_url, created_at, takeaways, action, audio_bytes")
       .order("created_at", { ascending: false })
       .then(({ data, error }) => {
         if (!alive) return;
@@ -942,6 +942,9 @@ function EpisodeCard({ ep, fresh }: { ep: Episode; fresh?: boolean }) {
       )}
 
       <div className="mt-4 flex flex-wrap gap-2 text-sm">
+        <a href={`/e/${ep.id}`} className="btn hot rounded-full px-4 py-1 font-bold text-white shadow-lg shadow-fuchsia-500/30">
+          🧠 Study it: breakdown, Q&amp;A, quiz
+        </a>
         <button onClick={share} className={`${pill} !border-fuchsia-400/40 !bg-fuchsia-500/20 !text-fuchsia-100`}>
           {copied ? "Link copied ✓" : "🔗 Share"}
         </button>

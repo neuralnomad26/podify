@@ -1,5 +1,5 @@
 import { createHash, randomUUID } from "node:crypto";
-import { scrape, synthesize, writeScript } from "@/lib/pipeline";
+import { scrape, sourceFor, synthesize, writeScript } from "@/lib/pipeline";
 import { BUCKET, supabaseAdmin, type Episode } from "@/lib/supabase-admin";
 
 export const runtime = "nodejs";
@@ -103,6 +103,8 @@ export async function POST(req: Request) {
             action,
             audio_bytes: audio.byteLength,
             guest_ip_hash: guestHash,
+            // Kept so the companion (breakdown, quiz, questions) can work from the paper itself.
+            source_text: sourceFor(article),
           })
           .select()
           .single();
@@ -115,7 +117,7 @@ export async function POST(req: Request) {
         }
 
         // The visitor hash is for rate limiting only; it never leaves the server.
-        send({ step: "done", episode: { ...(episode as Episode), guest_ip_hash: undefined } as Episode });
+        send({ step: "done", episode: { ...(episode as Episode), guest_ip_hash: undefined, source_text: undefined } as Episode });
       } catch (err) {
         send({ step: "error", message: err instanceof Error ? err.message : "Something went wrong" });
       } finally {

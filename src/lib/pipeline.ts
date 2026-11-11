@@ -63,6 +63,32 @@ export function fitPaper(markdown: string, max: number): string {
   return `${body.slice(0, head)}\n\n[... middle of the paper omitted ...]\n\n${body.slice(-tail)}`;
 }
 
+/** The text every later step works from: the whole article, or a paper's opening and closing sections. */
+export function sourceFor(article: { markdown: string; kind: SourceKind }): string {
+  return article.kind === "paper" ? fitPaper(article.markdown, MAX_INPUT_CHARS) : article.markdown.slice(0, MAX_INPUT_CHARS);
+}
+
+/**
+ * One OpenRouter call that must answer in JSON. Uses the same model list as the
+ * script writer, so a rate-limited free model falls through to the next.
+ */
+export async function askModel<T>(system: string, user: string, temperature = 0.3): Promise<T | null> {
+  const models = env.openrouterModels();
+  const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${env.openrouterKey()}`, "Content-Type": "application/json", "X-Title": "Podify" },
+    body: JSON.stringify({
+      ...(models.length > 1 ? { models } : { model: models[0] }),
+      temperature,
+      messages: [{ role: "system", content: system }, { role: "user", content: user }],
+    }),
+  });
+  if (!res.ok) throw new Error(`OpenRouter failed (${await readError(res)})`);
+  const json = await res.json();
+  const raw: string = json?.choices?.[0]?.message?.content ?? "";
+  return parseJsonLoose(raw) as T | null;
+}
+
 /** 1. Firecrawl: URL -> clean markdown (web pages and PDFs) */
 export async function scrape(
   inputUrl: string,
@@ -159,9 +185,9 @@ export async function writeScript(
   const title = (parsed?.title || pageTitle || "Untitled episode").toString().slice(0, 120);
   const takeaways = Array.isArray(parsed?.takeaways)
     ? parsed.takeaways
-        .filter((t): t is string => typeof t === "string" && t.trim().length > 0)
+        .filter((t: unknown): t is string => typeof t === "string" && t.trim().length > 0)
         .slice(0, 3)
-        .map((t) => stripMarkdown(t).slice(0, 200))
+        .map((t: string) => stripMarkdown(t).slice(0, 200))
     : [];
   const action = typeof parsed?.action === "string" && parsed.action.trim() ? stripMarkdown(parsed.action).slice(0, 240) : null;
   return { title, script, takeaways, action };
@@ -187,7 +213,8 @@ export async function synthesize(script: string): Promise<ArrayBuffer> {
 
 function parseJsonLoose(
   raw: string,
-): { title?: string; script?: string; takeaways?: unknown; action?: unknown } | null {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- callers validate the shape they asked for
+): any {
   const cleaned = raw.replace(/^```(?:json)?\s*|\s*```$/g, "").trim();
   try {
     return JSON.parse(cleaned);

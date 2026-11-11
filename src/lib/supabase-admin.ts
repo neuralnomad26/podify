@@ -16,7 +16,23 @@ export type Episode = {
   action: string | null;
   audio_bytes: number | null;
   featured?: boolean;
+  /** Server-side only: the paper text the companion works from. */
+  source_text?: string | null;
+  kit?: Kit | null;
 };
+
+export type Kit = {
+  tldr: string;
+  breakdown: { problem: string; approach: string; results: string; limitations: string; why_it_matters: string };
+  numbers: { value: string; meaning: string }[];
+  glossary: { term: string; plain: string }[];
+  quiz: { q: string; options: string[]; answer: number; why: string }[];
+  read_it_if: string;
+  skip_it_if: string;
+};
+
+export type Quote = { text: string; verified: boolean };
+export type Answer = { id?: string; question: string; answer: string; quotes: Quote[]; created_at?: string };
 
 export type Profile = {
   user_id: string;

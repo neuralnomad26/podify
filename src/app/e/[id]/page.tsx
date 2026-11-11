@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import Companion from "@/components/Companion";
 import Player from "@/components/Player";
+import { recentQuestions } from "@/lib/companion";
 import { supabaseAdmin, type Episode } from "@/lib/supabase-admin";
 import { hostOf } from "@/lib/cover";
 
@@ -25,6 +27,7 @@ export async function generateMetadata({ params }: PageProps<"/e/[id]">): Promis
 export default async function SharedEpisode({ params }: PageProps<"/e/[id]">) {
   const ep = await getEpisode((await params).id);
   if (!ep) notFound();
+  const questions = await recentQuestions(ep.id);
 
   return (
     <>
@@ -33,7 +36,7 @@ export default async function SharedEpisode({ params }: PageProps<"/e/[id]">) {
         <div className="blob blob-b" />
         <div className="blob blob-c" />
       </div>
-      <main className="mx-auto max-w-3xl px-6 py-10">
+      <main className="mx-auto max-w-4xl px-6 py-10">
         <Link href="/" className="rise inline-flex items-center gap-2 text-lg font-extrabold tracking-tight">
           <span className="hot grid h-9 w-9 place-items-center rounded-xl text-lg">
             <span className="wobble">🎧</span>
@@ -83,10 +86,7 @@ export default async function SharedEpisode({ params }: PageProps<"/e/[id]">) {
           </div>
         )}
 
-        <details className="rise glass mt-5 rounded-3xl p-5" style={{ animationDelay: "320ms" }}>
-          <summary className="cursor-pointer font-bold">📜 Transcript</summary>
-          <p className="mt-3 whitespace-pre-line leading-relaxed text-zinc-300">{ep.script}</p>
-        </details>
+        <Companion id={ep.id} script={ep.script} initialKit={ep.kit ?? null} initialQuestions={questions} />
       </main>
     </>
   );

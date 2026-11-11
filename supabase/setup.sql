@@ -72,3 +72,21 @@ alter table public.episodes alter column user_id drop not null;
 alter table public.episodes add column if not exists guest_ip_hash text;
 alter table public.episodes add column if not exists featured boolean not null default false;
 create index if not exists episodes_guest_idx on public.episodes (created_at desc) where user_id is null;
+
+-- ---------------------------------------------------------------------------
+-- Paper companion: study kit + grounded Q&A. Safe to run more than once.
+alter table public.episodes add column if not exists source_text text;
+alter table public.episodes add column if not exists kit jsonb;
+
+create table if not exists public.questions (
+  id          uuid primary key default gen_random_uuid(),
+  episode_id  uuid not null references public.episodes (id) on delete cascade,
+  question    text not null,
+  answer      text not null,
+  quotes      jsonb not null default '[]'::jsonb,
+  ip_hash     text,
+  created_at  timestamptz not null default now()
+);
+create index if not exists questions_episode_idx on public.questions (episode_id, created_at desc);
+-- No policies: only the server (service key) reads and writes questions.
+alter table public.questions enable row level security;
