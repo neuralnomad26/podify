@@ -1,0 +1,166 @@
+{
+  "version": 4,
+  "project": {
+    "catalog": "prod",
+    "initializedAt": "2026-11-11T12:42:15.448Z",
+    "merchantDisplayName": null,
+    "merchantId": "acct_1UaYjJC3rQiuA1dv",
+    "projectId": "project_61VjyoJk1cg885zF416VjwgfKgGCuLFLHQZNbWDVIDbU",
+    "projectName": "podify"
+  },
+  "providers": {
+    "elevenlabs": {
+      "accountRequestId": "facctrq_61VjyoXmowuDnCUf216VjwgfKgGCuLFLHQZNbWDVIKum",
+      "configuration": {},
+      "linkedAt": "2026-11-11T12:42:34.740Z",
+      "providerId": "prvdr_61UYtnmm5DvySq8Ol56tE",
+      "providerName": "ElevenLabs",
+      "redirectUrl": null,
+      "requestedAt": "2026-11-11T12:42:29.399Z",
+      "status": "complete"
+    },
+    "firecrawl": {
+      "accountRequestId": "facctrq_61VjypB9NZJXmEkvT16VjwgfKgGCuLFLHQZNbWDVIXBg",
+      "configuration": {},
+      "linkedAt": "2026-11-11T12:43:11.176Z",
+      "providerId": "prvdr_61URa0AjsVCYCdagK5Xqy",
+      "providerName": "Firecrawl",
+      "redirectUrl": null,
+      "requestedAt": "2026-11-11T12:43:09.618Z",
+      "status": "complete"
+    },
+    "openrouter": {
+      "accountRequestId": "facctrq_61VjyotdBoX6DDIbz16VjwgfKgGCuLFLHQZNbWDVIEES",
+      "configuration": {},
+      "linkedAt": "2026-11-11T12:42:53.500Z",
+      "providerId": "prvdr_61URImmFACEuDHEx651IO",
+      "providerName": "OpenRouter",
+      "redirectUrl": null,
+      "requestedAt": "2026-11-11T12:42:52.046Z",
+      "status": "complete"
+    },
+    "supabase": {
+      "accountRequestId": "facctrq_61VjypLr82PryDuNq16VjwgfKgGCuLFLHQZNbWDVIStM",
+      "configuration": {},
+      "linkedAt": "2026-11-11T12:43:35.092Z",
+      "providerId": "prvdr_61UIXYHdsyF69pZbG52n2",
+      "providerName": "Supabase",
+      "redirectUrl": null,
+      "requestedAt": "2026-11-11T12:43:20.092Z",
+      "status": "complete"
+    },
+    "vercel": {
+      "accountRequestId": "facctrq_61VjyqNWn99Q7ZLp016VjwgfKgGCuLFLHQZNbWDVIBjc",
+      "configuration": {},
+      "linkedAt": "2026-11-11T12:44:27.181Z",
+      "providerId": "prvdr_61ULUAr4zlQgZkvXY5LsG",
+      "providerName": "Vercel",
+      "redirectUrl": null,
+      "requestedAt": "2026-11-11T12:44:23.182Z",
+      "status": "complete"
+    }
+  },
+  "resources": {
+    "elevenlabs-tts": {
+      "configuration": {},
+      "createdAt": "2026-11-11T12:42:36.879Z",
+      "lastRevealedAt": "2026-11-11T12:42:37.289Z",
+      "lastStatus": "complete",
+      "livemode": true,
+      "name": "elevenlabs-tts",
+      "providerId": "prvdr_61UYtnmm5DvySq8Ol56tE",
+      "providerName": "ElevenLabs",
+      "resourceId": "fres_61VjyodcjTNTpZxyP16VjwgfKgGCuLFLHQZNbWDVI9yS",
+      "serviceId": "tts"
+    },
+    "firecrawl-api": {
+      "configuration": {},
+      "createdAt": "2026-11-11T12:43:16.121Z",
+      "lastRevealedAt": "2026-11-11T12:43:16.612Z",
+      "lastStatus": "complete",
+      "livemode": true,
+      "name": "firecrawl-api",
+      "providerId": "prvdr_61URa0AjsVCYCdagK5Xqy",
+      "providerName": "Firecrawl",
+      "resourceId": "fres_61VjypH4YRFrjVdPI16VjwgfKgGCuLFLHQZNbWDVI0SW",
+      "serviceId": "api"
+    },
+    "firecrawl-plan": {
+      "configuration": {},
+      "createdAt": "2026-11-11T12:43:12.419Z",
+      "lastRevealedAt": "2026-11-11T12:43:13.214Z",
+      "lastStatus": "complete",
+      "livemode": true,
+      "name": "firecrawl-plan",
+      "providerId": "prvdr_61URa0AjsVCYCdagK5Xqy",
+      "providerName": "Firecrawl",
+      "resourceId": "fres_61VjypDScz0aXNrW216VjwgfKgGCuLFLHQZNbWDVIDq4",
+      "serviceId": "free"
+    },
+    "openrouter-api": {
+      "configuration": {},
+      "createdAt": "2026-11-11T12:42:55.686Z",
+      "lastRevealedAt": "2026-11-11T12:42:56.123Z",
+      "lastStatus": "complete",
+      "livemode": true,
+      "name": "openrouter-api",
+      "providerId": "prvdr_61URImmFACEuDHEx651IO",
+      "providerName": "OpenRouter",
+      "resourceId": "fres_61Vjyovoo9y1RFX8v16VjwgfKgGCuLFLHQZNbWDVI8aW",
+      "serviceId": "api"
+    },
+    "podify": {
+      "configuration": {
+        "name": "podify",
+        "region": "americas"
+      },
+      "createdAt": "2026-11-11T12:44:18.249Z",
+      "lastRevealedAt": "2026-11-11T12:44:19.119Z",
+      "lastStatus": "complete",
+      "livemode": true,
+      "name": "podify",
+      "providerId": "prvdr_61UIXYHdsyF69pZbG52n2",
+      "providerName": "Supabase",
+      "resourceId": "fres_61VjypyNz1ES14Tdx16VjwgfKgGCuLFLHQZNbWDVI9JY",
+      "serviceId": "project"
+    },
+    "podify-2": {
+      "configuration": {
+        "name": "podify"
+      },
+      "createdAt": "2026-11-11T12:44:34.038Z",
+      "lastRevealedAt": "2026-11-11T12:44:34.692Z",
+      "lastStatus": "complete",
+      "livemode": true,
+      "name": "podify-2",
+      "providerId": "prvdr_61ULUAr4zlQgZkvXY5LsG",
+      "providerName": "Vercel",
+      "resourceId": "fres_61VjyqWCVyMuHhb0S16VjwgfKgGCuLFLHQZNbWDVI6Iq",
+      "serviceId": "project"
+    },
+    "supabase-plan": {
+      "configuration": {},
+      "createdAt": "2026-11-11T12:43:55.250Z",
+      "lastRevealedAt": "2026-11-11T12:43:55.880Z",
+      "lastStatus": "complete",
+      "livemode": true,
+      "name": "supabase-plan",
+      "providerId": "prvdr_61UIXYHdsyF69pZbG52n2",
+      "providerName": "Supabase",
+      "resourceId": "fres_61VjypbZs805nXamx16VjwgfKgGCuLFLHQZNbWDVI95M",
+      "serviceId": "free"
+    },
+    "vercel-plan": {
+      "configuration": {},
+      "createdAt": "2026-11-11T12:44:29.146Z",
+      "lastRevealedAt": "2026-11-11T12:44:30.005Z",
+      "lastStatus": "complete",
+      "livemode": true,
+      "name": "vercel-plan",
+      "providerId": "prvdr_61ULUAr4zlQgZkvXY5LsG",
+      "providerName": "Vercel",
+      "resourceId": "fres_61VjyqR3BdA0NGcFn16VjwgfKgGCuLFLHQZNbWDVITUu",
+      "serviceId": "hobby"
+    }
+  }
+}
