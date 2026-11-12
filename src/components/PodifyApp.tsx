@@ -247,17 +247,23 @@ function Reveal({ children, className = "", delay = 0 }: { children: React.React
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const io = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) {
-          el.classList.add("in");
-          io.disconnect();
-        }
-      },
-      { threshold: 0.1 },
-    );
-    io.observe(el);
-    return () => io.disconnect();
+    const check = () => {
+      if (el.getBoundingClientRect().top < window.innerHeight * 0.9) {
+        el.classList.add("in");
+        stop();
+      }
+    };
+    const stop = () => {
+      window.removeEventListener("scroll", check);
+      window.removeEventListener("resize", check);
+      clearInterval(poll);
+    };
+    window.addEventListener("scroll", check, { passive: true });
+    window.addEventListener("resize", check);
+    // Also poll slowly, in case the page moves without a scroll event (anchor jumps, late layout).
+    const poll = setInterval(check, 600);
+    check();
+    return stop;
   }, []);
   return (
     <div ref={ref} className={`reveal ${className}`} style={{ transitionDelay: `${delay}ms` }}>

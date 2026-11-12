@@ -302,10 +302,11 @@ export default function Scene3D() {
         const stops = () => {
           const offset = wide() ? 3.3 : 0; // the hero keeps its right half clear for this
           return [
-            { t: 0.0, cam: [0, 1.7, 12.5], look: [0, 0.15, 0], x: offset, scatter: 0.0 },
-            { t: 0.22, cam: [-1.2, 2.6, 10.0], look: [0, 0, 0], x: offset * 0.35, scatter: 0.04 },
-            { t: 0.6, cam: [1.6, 0.8, 6.6], look: [0, 0.1, 0], x: 0, scatter: 0.3 },
-            { t: 1.0, cam: [0, 11.5, 2.4], look: [0, 0, 0], x: 0, scatter: 0.1 },
+            // `size` is how large the record is; `dim` is how bright the scene is behind the content.
+            { t: 0.0, cam: [0, 1.7, 12.5], look: [0, 0.15, 0], x: offset, scatter: 0.0, size: wide() ? 0.6 : 0.7, dim: 0.9 },
+            { t: 0.22, cam: [-1.2, 2.6, 10.0], look: [0, 0, 0], x: offset * 0.35, scatter: 0.04, size: 0.85, dim: 0.4 },
+            { t: 0.6, cam: [1.6, 0.8, 6.6], look: [0, 0.1, 0], x: 0, scatter: 0.3, size: 1, dim: 0.34 },
+            { t: 1.0, cam: [0, 11.5, 2.4], look: [0, 0, 0], x: 0, scatter: 0.1, size: 1, dim: 0.5 },
           ];
         };
         let path = stops();
@@ -322,6 +323,8 @@ export default function Scene3D() {
             look: a.look.map((v, j) => lerp(v, b.look[j], k)),
             x: lerp(a.x, b.x, k),
             scatter: lerp(a.scatter, b.scatter, k),
+            size: lerp(a.size, b.size, k),
+            dim: lerp(a.dim, b.dim, k),
           };
         };
 
@@ -387,6 +390,8 @@ export default function Scene3D() {
           }
           cur.x = lerp(cur.x, target.x, k * 0.55);
           cur.scatter = lerp(cur.scatter, target.scatter, k * 0.55);
+          cur.size = lerp(cur.size, target.size, k * 0.55);
+          cur.dim = lerp(cur.dim, target.dim, k * 0.55);
           cur.mx = lerp(cur.mx, state.mx, k * 0.4);
           cur.my = lerp(cur.my, state.my, k * 0.4);
 
@@ -401,11 +406,15 @@ export default function Scene3D() {
           uniforms.uAmp.value = state.amp;
           uniforms.uMorph.value = state.morph;
           uniforms.uScatter.value = cur.scatter;
-          uniforms.uOpacity.value = Math.min(0.9, uniforms.uOpacity.value + dt * 0.6); // fade in
+          // Fade in on load, stay bright in the hero, and step back behind the content below it.
+          const o = uniforms.uOpacity.value;
+          uniforms.uOpacity.value = o < cur.dim ? Math.min(cur.dim, o + dt * 0.6) : Math.max(cur.dim, o - dt * 1.2);
           // Lets the page label the transformation ("paper" → "podcast").
           root.style.setProperty("--morph", state.morph.toFixed(3));
 
           // The page stands up and faces you; the record lies back.
+          // The page keeps its size; the record is drawn smaller in the hero so it never crowds the headline.
+          subject.scale.setScalar(lerp(1, cur.size, state.morph));
           subject.position.x = cur.x;
           subject.position.y = Math.sin(time * 0.5) * 0.08;
           subject.rotation.x = lerp(0.04, 0.42, state.morph) + cur.my * 0.07;
