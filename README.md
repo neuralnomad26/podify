@@ -252,6 +252,15 @@ Most of this repo was assembled by a coding agent, so the repo also carries the 
 - `.claude/hooks/guard-bash.mjs` is a pre-command check that blocks paid plans and billing changes, refuses to print `.env` or the vault, scans commits for key patterns, and asks before removing services, rotating credentials or force pushing.
 - `.claude/agents/podify-builder.md` is a project-specific builder agent that knows the layout, the roadmap and the verification steps.
 
+## Agent API (MPP)
+
+AI agents can buy an episode without an account: `POST /api/v1/episodes` with `{ "url": "..." }` returns HTTP 402 with an MPP payment challenge ($0.25 in stablecoin on Tempo; testnet unless `MPP_TESTNET=false`). The agent pays, resends the request, and gets the episode back as JSON with a `Payment-Receipt` header. Agents find the route through `/openapi.json` and `/llms.txt`.
+
+- Env (`.env.local`): `MPP_SECRET_KEY`, `MPP_TESTNET`, and the receiving wallet `PODIFY_PAY_ADDRESS` (falls back to `WARRANTY_ADDRESS`). Optional: `PODIFY_EPISODE_PRICE`, `MPP_REALM`, `PUBLIC_ORIGIN`.
+- `npm run db:setup` applies `supabase/setup.sql`; replay protection lives in Postgres (`mppx_store`).
+- `npm run agent:demo -- <paper-url>` plays a paying agent with `DEMO_AGENT_PRIVATE_KEY`. Each run is one paid episode.
+- Capacity (25 paid episodes a day) is checked before charging. If an episode fails after payment, the API returns 502 with the receipt; refunds are manual for now.
+
 ## Known limits
 
 - Episodes are capped at about 350 words (around two minutes) to stay inside the ElevenLabs free quota.
@@ -266,7 +275,7 @@ Most of this repo was assembled by a coding agent, so the repo also carries the 
 - [x] Episodes written for the listener, with takeaways and an action
 - [x] Private podcast feed
 - [x] Web articles
-- [ ] Podify Pro with Stripe Checkout: free monthly cap, subscription, Customer Portal
+- [x] Agent API: agents buy episodes over MPP (Machine Payments Protocol), no account needed
 - [ ] Daily digest: several saved links merged into one episode
 - [ ] Two-host conversations and voice choice
 

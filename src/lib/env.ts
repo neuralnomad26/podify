@@ -33,6 +33,13 @@ export const ENV_SPEC = {
   firecrawlKey: ["FIRECRAWL_API_KEY", "FIRECRAWL_API_API_KEY", "FIRECRAWL_PLAN_API_KEY"],
   openrouterKey: ["OPENROUTER_API_KEY"],
   elevenlabsKey: ["ELEVENLABS_API_KEY", "XI_API_KEY"],
+  // MPP (Machine Payments Protocol): agents pay per episode in stablecoins on Tempo.
+  mppSecret: ["MPP_SECRET_KEY"],
+  // Wallet that receives payments. Shares the one set up for the Warranty project.
+  mppRecipient: ["PODIFY_PAY_ADDRESS", "MPP_RECIPIENT", "WARRANTY_ADDRESS"],
+  // Postgres for MPP replay protection (shared by every serverless instance).
+  dbPoolerUrl: ["SUPABASE_POOLER_URL"],
+  dbPassword: ["SUPABASE_DB_PASS"],
 } as const;
 
 export const env = {
@@ -53,6 +60,19 @@ export const env = {
       .filter(Boolean)
       .slice(0, 3),
   // "George" — a default premade ElevenLabs voice available on the free tier.
+  mppSecret: () => required([...ENV_SPEC.mppSecret]),
+  mppRecipient: () => required([...ENV_SPEC.mppRecipient]) as `0x${string}`,
+  /** Tempo testnet (test funds) unless MPP_TESTNET=false. */
+  mppTestnet: () => (pick(["MPP_TESTNET"]) ?? "true") !== "false",
+  /** Realm in every 402 challenge: the production hostname. Unset locally, where mppx uses the request host. */
+  mppRealm: () => pick(["MPP_REALM"]),
+  /** Price of one agent-bought episode, in dollars of stablecoin. */
+  episodePrice: () => pick(["PODIFY_EPISODE_PRICE"]) ?? "0.25",
+  /** Demo agent wallet used by scripts/agent-demo.mjs. */
+  demoAgentKey: () => pick(["DEMO_AGENT_PRIVATE_KEY"]) as `0x${string}` | undefined,
+  dbPoolerUrl: () => required([...ENV_SPEC.dbPoolerUrl]),
+  dbPassword: () => required([...ENV_SPEC.dbPassword]),
+  publicOrigin: () => pick(["PUBLIC_ORIGIN"]),
   elevenlabsVoice: () => pick(["ELEVENLABS_VOICE_ID"]) ?? "JBFqnCBsd6RMkjVDRZzb",
 };
 

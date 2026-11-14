@@ -90,3 +90,12 @@ create table if not exists public.questions (
 create index if not exists questions_episode_idx on public.questions (episode_id, created_at desc);
 -- No policies: only the server (service key) reads and writes questions.
 alter table public.questions enable row level security;
+
+-- ---------------------------------------------------------------------------
+-- Agent API: episodes bought over MPP (Machine Payments Protocol). Safe to run more than once.
+-- payer = the wallet address that paid; null for app and guest episodes.
+alter table public.episodes add column if not exists payer text;
+create index if not exists episodes_paid_idx on public.episodes (created_at desc) where payer is not null;
+-- mppx keeps its replay-protection keys here (it also creates the table on first use).
+create table if not exists public.mppx_store (key text primary key, value text not null, expires double precision);
+alter table public.mppx_store enable row level security;
